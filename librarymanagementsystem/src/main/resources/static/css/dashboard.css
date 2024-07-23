@@ -1,0 +1,102 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('../images/library-background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+}
+body::before {
+    content: "";
+    position: fixed; /* Changed from absolute to fixed */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4); /* Ensuring a consistent overlay */
+    z-index: -1;
+}
+header {
+    background-color: rgba(0, 51, 102, 0.8);
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+}
+nav ul li {
+    margin-left: 1rem;
+}
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 150px);
+    padding: 2rem 0;
+}
+.search-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 600px;
+    margin: 1rem;
+}
+h2 {
+    margin-top: 0;
+    color: #003366;
+}
+#searchForm, #advancedSearchForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#searchInput, #isbn, #author, #title, #publisher, #status, #publicationDate {
+    padding: 0.5rem;
+    width: 100%;
+    max-width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+#searchButton, #advancedSearchButton, #toggleAdvancedSearch {
+    padding: 0.5rem 1rem;
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+#searchButton:hover, #advancedSearchButton:hover, #toggleAdvancedSearch:hover {
+    background-color: #004080;
+}
+footer {
+    background-color: rgba(0, 51, 102, 0.8);
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}

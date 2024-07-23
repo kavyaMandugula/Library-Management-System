@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Library Management System</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/login.js}"></script>
+</head>
+<body>
+    <header>
+        <h1>Library Management System</h1>
+        <nav>
+            <ul>
+                <li><a href="#" class="active">Login</a></li>
+                <li><a th:href="@{/register}">Register</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="form-container">
+            <h2>Login</h2>
+            <div th:if="${param.error}" class="error-message">
+                Invalid username or password.
+            </div>
+            <div th:if="${param.logout}" class="info-message">
+                You have been logged out.
+            </div>
+            <form th:action="@{/login}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn-login">Login</button>
+            </form>
+            <div class="form-links">
+                <a th:href="@{/forgot-password}" id="forgotPassword">Forgot Password?</a>
+                <a th:href="@{/register}">Don't have an account? Sign up</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Contact Us: library@lms.com</p>
+        <p>Phone: (123) 456-7890</p>
+        <div class="social-icons">
+            <a href="#" class="icon-facebook"></a>
+            <a href="#" class="icon-twitter"></a>
+            <a href="#" class="icon-instagram"></a>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Account - Library Management System</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/script.js}"></script>
+</head>
+<body>
+    <div th:replace="fragments/footer :: footer"></div>
+    <h1>Admin Account</h1>
+    <h2>Active Loans</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Book</th>
+                <th>Checkout Date</th>
+                <th>Due Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="loan : ${activeLoans}">
+                <td th:text="${loan.userName}"></td>
+                <td th:text="${loan.bookTitle}"></td>
+                <td th:text="${#temporals.format(loan.checkoutDate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${#temporals.format(loan.dueDate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${loan.status}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

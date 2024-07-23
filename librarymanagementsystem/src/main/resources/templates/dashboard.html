@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Library Management System</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+  <script th:inline="javascript">
+    var csrfToken = /*[[${_csrf.token}]]*/ '';
+    var csrfHeader = /*[[${_csrf.headerName}]]*/ '';
+  </script>
+</head>
+
+<body>
+  <div th:replace="fragments/header :: header"></div>
+  <main>
+    <div class="search-container">
+      <h2>Find books in our library</h2>
+      <form id="searchForm">
+        <input type="text" id="searchInput" placeholder="Search for books, authors, or topics">
+        <button type="submit" id="searchButton">Search</button>
+      </form>
+      <button id="toggleAdvancedSearch">Advanced Search</button>
+      <div id="advancedSearch" style="display:none;">
+        <form id="advancedSearchForm">
+          <div class="form-group">
+            <label for="isbn">ISBN:</label>
+            <select id="isbn" name="isbn" class="select2" style="width: 100%;">
+              <option value="">Select ISBN</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="author">Author:</label>
+            <select id="author" name="author" class="select2" style="width: 100%;">
+              <option value="">Select Author</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="title">Title:</label>
+            <select id="title" name="title" class="select2" style="width: 100%;">
+              <option value="">Select Title</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="status">Status:</label>
+            <select id="status" name="status" class="select2" style="width: 100%;">
+              <option value="">Select Status</option>
+            </select>
+          </div>
+          <div class="form-buttons">
+            <button type="submit" id="advancedSearchButton">Search</button>
+            <button type="button" id="clearAdvancedSearch">Clear</button>
+          </div>
+        </form>
+      </div>
+      <div id="bookDetails"></div>
+    </div>
+  </main>
+  <footer>
+    <p>© 2024 Library Management System. All rights reserved.</p>
+  </footer>
+  <script id="search-result-template" type="text/x-handlebars-template">
+    {{#each books}}
+    <div class="book-item">
+        <h3>{{title}}</h3>
+        <p>Author: {{author}}</p>
+        <p>ISBN: {{isbn}}</p>
+        <p>Available: {{availableQuantity}}</p>
+        {{#if availableQuantity}}
+        <button class="loan-button" data-book-id="{{id}}">Loan</button>
+        {{else}}
+        <p>Not available for loan</p>
+        {{/if}}
+    </div>
+    {{/each}}
+  </script>
+  <script th:src="@{/js/script.js}"></script>
+
+</body>
+
+</html>
