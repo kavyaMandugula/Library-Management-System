@@ -32,10 +32,10 @@ public class UserController {
 
     @GetMapping("/register")
     public String showRegistrationForm() {
-        return "registration";
+        return "register";
     }
 
-    @PostMapping("/api/users/register")
+    @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserModel user) {
         try {
             UserModel registeredUser = userService.registerUser(user);

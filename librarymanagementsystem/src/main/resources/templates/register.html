@@ -6,7 +6,11 @@
     <title>Register - Library Management System</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script th:src="@{/js/registration.js}"></script>
+    <script th:src="@{/js/register.js}"></script>
+    <script th:inline="javascript">
+        var csrfToken = /*[[${_csrf.token}]]*/ '';
+        var csrfHeader = /*[[${_csrf.headerName}]]*/ '';
+      </script>
 </head>
 <body>
     <header>

@@ -26,10 +26,17 @@ $(document).ready(function() {
   
         // Make API call to register user
         $.ajax({
-          url: '/api/users/register',
+          url: '/register',
           type: 'POST',
+          
           contentType: 'application/json',
           data: JSON.stringify(userData),
+          beforeSend: function(xhr) {
+            if (csrfHeader && csrfToken) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            }
+        },
+        
           success: function(response) {
               alert('Registration successful!');
               window.location.href = '/login';

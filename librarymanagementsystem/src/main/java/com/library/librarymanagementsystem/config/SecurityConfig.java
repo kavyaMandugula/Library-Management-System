@@ -24,7 +24,7 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
             .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/books/*/loan").authenticated()
-                .requestMatchers("/login", "/register", "/css/**", "/js/**").permitAll()
+                .requestMatchers("/login", "/register", "/css/**", "/js/**", "/api/users/register").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
