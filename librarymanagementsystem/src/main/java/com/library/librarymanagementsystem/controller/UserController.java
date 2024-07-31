@@ -1,7 +1,4 @@
-
 package com.library.librarymanagementsystem.controller;
-
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,21 +11,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.library.librarymanagementsystem.entities.User;
 import com.library.librarymanagementsystem.model.PasswordResetRequest;
 import com.library.librarymanagementsystem.model.UserModel;
 import com.library.librarymanagementsystem.model.UserUpdateDTO;
+import com.library.librarymanagementsystem.repository.UserRepository;
 import com.library.librarymanagementsystem.service.UserService;
+
+import jakarta.validation.Valid;
 
 /**
  *
  * @author kavya
  */
-
 @Controller
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/register")
     public String showRegistrationForm() {
@@ -88,6 +91,16 @@ public class UserController {
     @GetMapping("/reset-success")
     public String showResetSuccessPage() {
         return "reset-success";
+    }
+
+    @PostMapping("/api/admin/create-initial")
+    public ResponseEntity<?> createInitialAdmin(@Valid @RequestBody UserModel user) {
+        if (userRepository.count() > 0) {
+            return ResponseEntity.badRequest().body("Initial admin can only be created when no users exist");
+        }
+        user.setRole(User.UserRole.ADMIN);
+        UserModel registeredUser = userService.registerUser(user);
+        return ResponseEntity.ok(registeredUser);
     }
 
 }

@@ -27,6 +27,8 @@ public class LoanService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private BookService bookservice;
 
     public Loan checkoutBook(Long userId, Long bookId) {
         User user = userRepository.findById(userId)
@@ -79,7 +81,7 @@ public class LoanService {
     }
 
     public List<LoanDTO> getLoansByUserId(Long userId) {
-        List<Loan> loans = loanRepository.findByUserId(userId);
+            List<Loan> loans = loanRepository.findByUserId(userId);
         return loans.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
@@ -97,6 +99,11 @@ public class LoanService {
     public List<LoanDTO> getAllActiveLoans() {
         return loanRepository.findByStatus(LoanStatus.ACTIVE).stream()
                 .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<Loan> getAllActiveLoansFromLoans() {
+        return loanRepository.findByStatus(LoanStatus.ACTIVE).stream()
                 .collect(Collectors.toList());
     }
 
@@ -125,5 +132,30 @@ public class LoanService {
 
         return loanRepository.save(loan);
     }
+
+    public List<LoanDTO> getUserLoans(Long userId) {
+        List<Loan> loans = loanRepository.findByUserId(userId);
+        return loans.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    public void addLoan(String bookId, String userId) {
+        Long bId = Long.parseLong(bookId);
+        Long uId = Long.parseLong(userId);
+
+        checkoutBook(uId, bId);
+    }
+
+
+    public void removeLoan(Long loanId) {
+        loanRepository.deleteById(loanId);
+    }
+
+    public void removeBookFromUser(Long userId, Long bookId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Book book = bookservice.getBookById(bookId).orElse(null);
+        user.getLoans().removeIf(loan -> loan.getBook().getId().equals(bookId));
+        userRepository.save(user);
+    }
+
 
 }

@@ -9,9 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.library.librarymanagementsystem.entities.Loan;
 import com.library.librarymanagementsystem.entities.User;
 import com.library.librarymanagementsystem.entities.User.UserRole;
-import com.library.librarymanagementsystem.model.LoanDTO;
+import com.library.librarymanagementsystem.repository.UserRepository;
 import com.library.librarymanagementsystem.service.LoanService;
 import com.library.librarymanagementsystem.service.UserService;
 
@@ -24,6 +25,9 @@ public class AccountController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping
     public String getAccountPage(Model model, Principal principal) {
@@ -41,10 +45,12 @@ public class AccountController {
     }   
 
     @GetMapping("/admin")
-    public String getAdminAccountPage(Model model) {
-        List<LoanDTO> activeLoans = loanService.getAllActiveLoans();
-        model.addAttribute("activeLoans", activeLoans);
-        return "admin"; 
+        public String getAdminAccountPage(Model model) {
+    List<Loan> activeLoans = loanService.getAllActiveLoansFromLoans();
+    List<User> users = userRepository.findAll();
+    model.addAttribute("activeLoans", activeLoans);
+    model.addAttribute("users", users);
+    return "admin"; 
     }
 
    

@@ -131,4 +131,8 @@ public Map<String, List<String>> getAdvancedSearchOptions() {
         return books.stream().map(this::convertToDTO).collect(Collectors.toList());
     
     }
+
+    public List<BookDTO> convertEnityBookDTOs(List<Book> books) {
+        return books.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
 }

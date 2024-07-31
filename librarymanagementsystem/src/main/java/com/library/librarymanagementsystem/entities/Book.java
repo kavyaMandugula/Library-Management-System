@@ -1,5 +1,9 @@
 package com.library.librarymanagementsystem.entities;
 
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -7,6 +11,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -53,6 +58,12 @@ public class Book {
 
     @Column(name = "available_quantity", nullable = false)
     private Integer availableQuantity = 1;
+
+    @OneToMany(mappedBy = "book")
+    @JsonIgnoreProperties("book")
+    private Set<Loan> loans;
+
+
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

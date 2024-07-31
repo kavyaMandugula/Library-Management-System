@@ -47,6 +47,9 @@ public class LoginController {
             );
             SecurityContextHolder.getContext().setAuthentication(auth);
             session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+            if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+                return "redirect:/admin/dashboard";
+            }
             return "redirect:/dashboard";
         } catch (AuthenticationException e) {
             return "redirect:/login?error";

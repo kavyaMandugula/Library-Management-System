@@ -2,12 +2,11 @@ package com.library.librarymanagementsystem.model;
 
 import java.time.LocalDateTime;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
 import com.library.librarymanagementsystem.entities.User.UserRole;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 

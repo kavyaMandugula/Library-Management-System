@@ -3,6 +3,7 @@ package com.library.librarymanagementsystem.config;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -24,7 +25,9 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
             .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/books/*/loan").authenticated()
-                .requestMatchers("/login", "/register", "/css/**", "/js/**", "/api/users/register").permitAll()
+                .requestMatchers("/login", "/register", "/css/**", "/js/**", "/api/users/register","/forgot-password", "/api/users/reset-password","/api/admin/create-initial").permitAll()
+                .requestMatchers("/admin", "/api/admin/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/admin/users/*/loans/*").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

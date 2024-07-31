@@ -1,6 +1,8 @@
 package com.library.librarymanagementsystem.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -18,7 +20,8 @@ import com.library.librarymanagementsystem.repository.UserRepository;
 
 @Service
 @Primary
-public class UserService implements UserDetailsService{
+public class UserService implements UserDetailsService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -108,8 +111,8 @@ public class UserService implements UserDetailsService{
 
     public void resetPassword(String email, String newPassword) throws Exception {
         User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new Exception("No user found with this email address"));
-        
+                .orElseThrow(() -> new Exception("No user found with this email address"));
+
         // In a real application, you should hash the password before saving
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
@@ -118,11 +121,28 @@ public class UserService implements UserDetailsService{
     public User getUserByUsername(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-            return user;
+        return user;
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
+
+    public List<User> searchUsers(String query) {
+        return userRepository.findByUsernameContainingOrEmailContaining(query, query);
+    }
+
+    public List<UserModel> getAllUsers() {
+
+        List<User> usersList = userRepository.findAll();
+
+        return usersList.stream().map(this::convertToUserModel).collect(Collectors.toList());
+    }
+
+    public User getUserById(Long userId) {
+        return userRepository.findByIdWithLoans(userId)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userId));
+    }
+
 }

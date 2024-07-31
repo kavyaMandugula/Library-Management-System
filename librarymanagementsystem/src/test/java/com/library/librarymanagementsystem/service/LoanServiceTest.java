@@ -2,17 +2,22 @@ package com.library.librarymanagementsystem.service;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
@@ -37,6 +42,9 @@ class LoanServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private BookService bookService;
 
     @BeforeEach
     void setUp() {
@@ -135,6 +143,18 @@ class LoanServiceTest {
     }
 
     @Test
+    void testGetAllActiveLoansFromLoans() {
+        List<Loan> activeLoans = Arrays.asList(createSampleLoan(), createSampleLoan());
+
+        when(loanRepository.findByStatus(Loan.LoanStatus.ACTIVE)).thenReturn(activeLoans);
+
+        List<Loan> result = loanService.getAllActiveLoansFromLoans();
+
+        assertEquals(2, result.size());
+        // Add more assertions if needed
+    }
+
+    @Test
     void testLoanBook_Success() {
         Long bookId = 1L;
         String username = "testuser";
@@ -154,6 +174,66 @@ class LoanServiceTest {
         assertEquals(Loan.LoanStatus.ACTIVE, result.getStatus());
         assertEquals(0, book.getAvailableQuantity());
     }
+
+    @Test
+    void testGetUserLoans() {
+        Long userId = 1L;
+        List<Loan> loans = Arrays.asList(createSampleLoan(), createSampleLoan());
+
+        when(loanRepository.findByUserId(userId)).thenReturn(loans);
+
+        List<LoanDTO> result = loanService.getUserLoans(userId);
+
+        assertEquals(2, result.size());
+        // Add more assertions to verify the content of LoanDTOs
+    }
+
+    @Test
+    void testAddLoan() {
+        String bookId = "1";
+        String userId = "1";
+        User user = new User();
+        Book book = new Book();
+        book.setAvailableQuantity(1);
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
+        when(loanRepository.save(any(Loan.class))).thenAnswer(i -> i.getArguments()[0]);
+
+        assertDoesNotThrow(() -> loanService.addLoan(bookId, userId));
+    }
+
+    @Test
+    void testRemoveLoan() {
+        Long loanId = 1L;
+
+        assertDoesNotThrow(() -> loanService.removeLoan(loanId));
+        verify(loanRepository).deleteById(loanId);
+    }
+
+    @Test
+void testRemoveBookFromUser() {
+    Long userId = 1L;
+    Long bookId = 1L;
+    User user = new User();
+    Book book = new Book();
+    book.setId(bookId);
+    Loan loan = new Loan();
+    loan.setBook(book);
+    
+    Set<Loan> loans = new HashSet<>();
+    loans.add(loan);
+    user.setLoans(loans);
+
+    when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+    when(bookService.getBookById(bookId)).thenReturn(Optional.of(book));
+    when(userRepository.save(any(User.class))).thenReturn(user);
+
+    loanService.removeBookFromUser(userId, bookId);
+
+    assertTrue(user.getLoans().isEmpty());
+    verify(userRepository).save(user);
+}
 
     private Loan createSampleLoan() {
         Loan loan = new Loan();

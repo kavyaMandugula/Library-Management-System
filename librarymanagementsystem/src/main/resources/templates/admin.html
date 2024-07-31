@@ -1,36 +1,57 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Account - Library Management System</title>
+    <title>Admin Dashboard - Library Management System</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script th:src="@{/js/script.js}"></script>
+    <script th:src="@{/js/admin.js}"></script>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
-    <div th:replace="fragments/footer :: footer"></div>
-    <h1>Admin Account</h1>
-    <h2>Active Loans</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>User</th>
-                <th>Book</th>
-                <th>Checkout Date</th>
-                <th>Due Date</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="loan : ${activeLoans}">
-                <td th:text="${loan.userName}"></td>
-                <td th:text="${loan.bookTitle}"></td>
-                <td th:text="${#temporals.format(loan.checkoutDate, 'yyyy-MM-dd')}"></td>
-                <td th:text="${#temporals.format(loan.dueDate, 'yyyy-MM-dd')}"></td>
-                <td th:text="${loan.status}"></td>
-            </tr>
-        </tbody>
-    </table>
+    <header>
+        <h1>Admin Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="/admin/dashboard">Dashboard</a></li>
+                <li><a href="/account">My Account</a></li>
+                <li><a href="/admin/users">User Accounts</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="admin-dashboard">
+        <h2>User Search</h2>
+        <div class="form-group">
+            <label for="userSearch">Search User:</label>
+            <input type="text" id="userSearch" placeholder="Start typing to search for a user...">
+            <select id="userSelect" onchange="loadUserDetails(this.value)" size="5"></select>
+        </div>
+    </section>
+
+    <section class="admin-dashboard" id="userDetailsSection" style="display: none;">
+        <h2>User Details</h2>
+        <div id="userDetails"></div>
+        <h3>Books Loaned</h3>
+        <table id="loansTable" class="loans-table">
+            <thead>
+                <tr>
+                    <th>Book Title</th>
+                    <th>Author</th>
+                    <th>Checkout Date</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="loansTableBody">
+                <!-- Data will be dynamically inserted here -->
+            </tbody>
+        </table>
+        <p id="noLoansMessage" style="display:none;">This user has no active loans.</p>
+    </section>
 </body>
 </html>

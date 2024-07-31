@@ -13,11 +13,6 @@ import lombok.NoArgsConstructor;
 public class LoanDTO {
 
     private Long id;
-    @Override
-    public String toString() {
-        return "LoanDTO [id=" + id + ", bookTitle=" + bookTitle + ", bookAuthor=" + bookAuthor + ", checkoutDate="
-                + checkoutDate + ", dueDate=" + dueDate + ", status=" + status + "]";
-    }
     private String bookTitle;
     private String bookAuthor;
     private LocalDateTime checkoutDate;

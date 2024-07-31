@@ -38,6 +38,7 @@ $(document).ready(function() {
 
     // Function to perform search
     function performSearch(query) {
+        $("#bookDetails").empty(); // Clear previous results
         $.ajax({
             url: "/api/books/search",
             method: "GET",
@@ -59,9 +60,8 @@ $(document).ready(function() {
 
     // Handle loan button click
     $(document).on('click', '.loan-button', function() {
-        console.log("Loan button clicked");
         var bookId = $(this).data('book-id');
-        console.log("Book ID:", bookId);
+        var searchQuery = $('#searchInput').val(); // Get the current search query
         
         $.ajax({
             url: '/api/books/' + bookId + '/loan',
@@ -72,11 +72,15 @@ $(document).ready(function() {
                 }
             },
             success: function(response) {
-                console.log("Loan successful:", response);
                 alert('Book loaned successfully!');
+                // Refresh the search results
+                if (searchQuery) {
+                    performSearch(searchQuery);
+                } else {
+                    fetchBookDetails(bookId); // Refresh single book details if no search query
+                }
             },
             error: function(xhr, status, error) {
-                console.error("Loan request failed:", status, error);
                 alert('Error loaning book: ' + xhr.responseText);
             }
         });
@@ -96,6 +100,11 @@ $(document).ready(function() {
         $.ajax({
             url: "/api/books/advanced-search-options",
             method: "GET",
+            beforeSend: function(xhr) {
+                if (csrfHeader && csrfToken) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                }
+            },
             success: function(options) {
                 populateSelect2Dropdown('#isbn', options.isbns);
                 populateSelect2Dropdown('#author', options.authors);
@@ -131,17 +140,23 @@ $(document).ready(function() {
             title: $('#title').val(),
             status: $('#status').val()
         };
-
+    
         $.ajax({
             url: "/api/books/advanced-search",
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify(searchCriteria),
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
             success: function(books) {
                 displaySearchResults(books);
             },
             error: function(xhr, status, error) {
                 console.error("Error performing advanced search:", error);
+                if (xhr.status === 403) {
+                    alert("You don't have permission to perform this search. Please check if you're logged in.");
+                }
             }
         });
     });
@@ -199,5 +214,6 @@ $(document).ready(function() {
         detailsHtml += "</div>";
 
         $("#bookDetails").html(detailsHtml);
+        
     }
 });

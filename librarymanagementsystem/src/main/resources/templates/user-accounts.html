@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Accounts - Library Management System</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/user-accounts.js}"></script>
+</head>
+<body>
+    <header>
+        <h1>Library Management System</h1>
+        <nav>
+            <ul>
+                <li><a href="#" class="icon-catalog">Book Catalog</a></li>
+                <li><a href="#" class="icon-account">My Account</a></li>
+                <li><a href="#" class="icon-loans">Book Loans</a></li>
+                <li><a href="#" class="icon-users active">User Accounts</a></li>
+                <li><a href="login.html">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="user-accounts-page">
+        <h2>User Accounts Management</h2>
+        <section class="user-search-section">
+            <select id="userSelect">
+                <option value="">Select a user</option>
+            </select>
+        </section>
+        <section class="user-details-section">
+            <h3>User Details</h3>
+            <div id="userDetails"></div>
+        </section>
+        <section class="user-loans-section">
+            <h3>User Loans</h3>
+            <div id="userLoans"></div>
+        </section>
+        <section class="loan-management-section">
+            <h3>Loan Management</h3>
+            <div id="loanManagement">
+                <select id="bookSelect">
+                    <option value="">Select a book</option>
+                </select>
+                <button id="addLoanBtn">Add Loan</button>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>© 2024 Library Management System. All rights reserved.</p>
+    </footer>
+</body>
+</html>

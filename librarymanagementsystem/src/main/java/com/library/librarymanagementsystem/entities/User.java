@@ -1,19 +1,22 @@
 package com.library.librarymanagementsystem.entities;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,7 +32,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements  UserDetails {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,7 +65,6 @@ public class User implements  UserDetails {
     @Column(nullable = false)
     private AccountStatus status = AccountStatus.ACTIVE;
 
-
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -71,6 +73,7 @@ public class User implements  UserDetails {
     public enum UserRole {
         PATRON, LIBRARIAN, ADMIN
     }
+
     public enum AccountStatus {
         ACTIVE, SUSPENDED, LOCKED
     }
@@ -110,6 +113,8 @@ public class User implements  UserDetails {
         return this.username;
     }
 
-    @OneToMany(mappedBy = "user")
-    private List<Loan> loans = new ArrayList<>();
+     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("user")
+    private Set<Loan> loans;
+
 }

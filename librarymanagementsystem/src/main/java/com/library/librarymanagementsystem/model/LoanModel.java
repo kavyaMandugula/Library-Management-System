@@ -2,8 +2,7 @@ package com.library.librarymanagementsystem.model;
 
 import java.time.LocalDateTime;
 
-import javax.validation.constraints.NotNull;
-
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 

@@ -1,5 +1,15 @@
 $(document).ready(function() {
+
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $.ajaxSetup({
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
+        }
+    });
+
     $('#resetPasswordForm').submit(function(event) {
+
         event.preventDefault();
         
         var email = $('#email').val();
@@ -24,7 +34,8 @@ $(document).ready(function() {
                 window.location.href = '/reset-success';
             },
             error: function(xhr, status, error) {
-                alert('Failed to reset password: ' + xhr.responseText);
+                var errorMessage = xhr.responseText || 'An error occurred while resetting the password.';
+                alert('Failed to reset password: ' + errorMessage);
             }
         });
     });
